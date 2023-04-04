@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "82172650054",
+    "project_id": "my-hspl-food",
+    "storage_bucket": "my-hspl-food.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:82172650054:android:15eb9addc65f42222fa047",
+        "android_client_info": {
+          "package_name": "com.itanand.beeburger"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "82172650054-s4ku5rremq87s3me0mftdnn3b3sg136f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.itanand.beeburger",
+            "certificate_hash": "1106421817cefb00374ae2d9e8ce3563208e3e21"
+          }
+        },
+        {
+          "client_id": "82172650054-33fbd1gc16o5beft8r9ctjqs113rh8op.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAq8L_NqsdoSh462_7ruBZrn3PGZgyN1xU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "82172650054-33fbd1gc16o5beft8r9ctjqs113rh8op.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "82172650054-dlenl65rqpabk1tk9p8u14vlujlha44i.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.sixamtech.stackFood"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
