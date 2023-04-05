@@ -100,6 +100,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     color: Theme.of(context).cardColor, borderRadius: BorderRadius.circular(Dimensions.RADIUS_SMALL),
                     boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300], blurRadius: 5, spreadRadius: 1)],
                   ) : null,
+
                   child: GetBuilder<AuthController>(builder: (authController) {
 
                     return Column(children: [
