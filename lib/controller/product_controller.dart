@@ -25,7 +25,7 @@ class ProductController extends GetxController implements GetxService {
   List<int> _addOnQtyList = [];
   String _popularType = 'all';
   String _reviewedType = 'all';
-  static List<String> _productTypeList = ['all', 'veg', 'non_veg'];
+  static List<String> _productTypeList = ['all', 'veg', 'non_veg', 'vegan'];
   int _cartIndex = -1;
   int _imageIndex = 0;
 
@@ -42,19 +42,21 @@ class ProductController extends GetxController implements GetxService {
   int get cartIndex => _cartIndex;
   int get imageIndex => _imageIndex;
 
-  Future<void> getPopularProductList(bool reload, String type, bool notify) async {
+  Future<void> getPopularProductList(
+      bool reload, String type, bool notify) async {
     _popularType = type;
-    if(reload) {
+    if (reload) {
       _popularProductList = null;
     }
-    if(notify) {
+    if (notify) {
       update();
     }
-    if(_popularProductList == null || reload) {
+    if (_popularProductList == null || reload) {
       Response response = await productRepo.getPopularProductList(type);
       if (response.statusCode == 200) {
         _popularProductList = [];
-        _popularProductList.addAll(ProductModel.fromJson(response.body).products);
+        _popularProductList
+            .addAll(ProductModel.fromJson(response.body).products);
         _isLoading = false;
       } else {
         ApiChecker.checkApi(response);
@@ -63,19 +65,21 @@ class ProductController extends GetxController implements GetxService {
     }
   }
 
-  Future<void> getReviewedProductList(bool reload, String type, bool notify) async {
+  Future<void> getReviewedProductList(
+      bool reload, String type, bool notify) async {
     _reviewedType = type;
-    if(reload) {
+    if (reload) {
       _reviewedProductList = null;
     }
-    if(notify) {
+    if (notify) {
       update();
     }
-    if(_reviewedProductList == null || reload) {
+    if (_reviewedProductList == null || reload) {
       Response response = await productRepo.getReviewedProductList(type);
       if (response.statusCode == 200) {
         _reviewedProductList = [];
-        _reviewedProductList.addAll(ProductModel.fromJson(response.body).products);
+        _reviewedProductList
+            .addAll(ProductModel.fromJson(response.body).products);
         _isLoading = false;
       } else {
         ApiChecker.checkApi(response);
@@ -91,7 +95,7 @@ class ProductController extends GetxController implements GetxService {
 
   void setImageIndex(int index, bool notify) {
     _imageIndex = index;
-    if(notify) {
+    if (notify) {
       update();
     }
   }
@@ -101,26 +105,29 @@ class ProductController extends GetxController implements GetxService {
     _addOnQtyList = [];
     _addOnActiveList = [];
 
-    if(cart != null) {
+    if (cart != null) {
       _quantity = cart.quantity;
       _selectedVariations.addAll(cart.variations);
       List<int> _addOnIdList = [];
       cart.addOnIds.forEach((addOnId) => _addOnIdList.add(addOnId.id));
       product.addOns.forEach((addOn) {
-        if(_addOnIdList.contains(addOn.id)) {
+        if (_addOnIdList.contains(addOn.id)) {
           _addOnActiveList.add(true);
-          _addOnQtyList.add(cart.addOnIds[_addOnIdList.indexOf(addOn.id)].quantity);
-        }else {
+          _addOnQtyList
+              .add(cart.addOnIds[_addOnIdList.indexOf(addOn.id)].quantity);
+        } else {
           _addOnActiveList.add(false);
           _addOnQtyList.add(1);
         }
       });
-    }else {
+    } else {
       _quantity = 1;
-      if(product.variations != null){
-        for(int index=0; index<product.variations.length; index++) {
+      if (product.variations != null) {
+        for (int index = 0; index < product.variations.length; index++) {
           _selectedVariations.add([]);
-          for(int i=0; i < product.variations[index].variationValues.length; i++) {
+          for (int i = 0;
+              i < product.variations[index].variationValues.length;
+              i++) {
             _selectedVariations[index].add(false);
           }
         }
@@ -130,14 +137,13 @@ class ProductController extends GetxController implements GetxService {
         _addOnActiveList.add(false);
         _addOnQtyList.add(1);
       });
-
     }
   }
 
   int selectedVariationLength(List<List<bool>> selectedVariations, int index) {
     int _length = 0;
-    for(bool isSelected in selectedVariations[index]) {
-      if(isSelected) {
+    for (bool isSelected in selectedVariations[index]) {
+      if (isSelected) {
         _length++;
       }
     }
@@ -160,17 +166,23 @@ class ProductController extends GetxController implements GetxService {
     //   }
     // });
     _cartIndex = Get.find<CartController>().isExistInCart(product.id, null);
-    if(_cartIndex != -1) {
+    if (_cartIndex != -1) {
       _quantity = Get.find<CartController>().cartList[_cartIndex].quantity;
       _addOnActiveList = [];
       _addOnQtyList = [];
       List<int> _addOnIdList = [];
-      Get.find<CartController>().cartList[_cartIndex].addOnIds.forEach((addOnId) => _addOnIdList.add(addOnId.id));
+      Get.find<CartController>()
+          .cartList[_cartIndex]
+          .addOnIds
+          .forEach((addOnId) => _addOnIdList.add(addOnId.id));
       product.addOns.forEach((addOn) {
-        if(_addOnIdList.contains(addOn.id)) {
+        if (_addOnIdList.contains(addOn.id)) {
           _addOnActiveList.add(true);
-          _addOnQtyList.add(Get.find<CartController>().cartList[_cartIndex].addOnIds[_addOnIdList.indexOf(addOn.id)].quantity);
-        }else {
+          _addOnQtyList.add(Get.find<CartController>()
+              .cartList[_cartIndex]
+              .addOnIds[_addOnIdList.indexOf(addOn.id)]
+              .quantity);
+        } else {
           _addOnActiveList.add(false);
           _addOnQtyList.add(1);
         }
@@ -197,23 +209,27 @@ class ProductController extends GetxController implements GetxService {
     update();
   }
 
-  void setCartVariationIndex(int index, int i, Product product, bool isMultiSelect) {
-    if(!isMultiSelect) {
-      for(int j = 0; j < _selectedVariations[index].length; j++) {
-        if(product.variations[index].required){
+  void setCartVariationIndex(
+      int index, int i, Product product, bool isMultiSelect) {
+    if (!isMultiSelect) {
+      for (int j = 0; j < _selectedVariations[index].length; j++) {
+        if (product.variations[index].required) {
           _selectedVariations[index][j] = j == i;
-        }else{
-          if(_selectedVariations[index][j]){
+        } else {
+          if (_selectedVariations[index][j]) {
             _selectedVariations[index][j] = false;
-          }else{
+          } else {
             _selectedVariations[index][j] = j == i;
           }
         }
       }
     } else {
-      if(!_selectedVariations[index][i] && selectedVariationLength(_selectedVariations, index) >= product.variations[index].max) {
-        _showUpperCartSnackBar('${'maximum_variation_for'.tr} ${product.variations[index].name} ${'is'.tr} ${product.variations[index].max}');
-      }else {
+      if (!_selectedVariations[index][i] &&
+          selectedVariationLength(_selectedVariations, index) >=
+              product.variations[index].max) {
+        _showUpperCartSnackBar(
+            '${'maximum_variation_for'.tr} ${product.variations[index].name} ${'is'.tr} ${product.variations[index].max}');
+      } else {
         _selectedVariations[index][i] = !_selectedVariations[index][i];
       }
     }
@@ -328,11 +344,14 @@ class ProductController extends GetxController implements GetxService {
   // }
 
   bool isAvailable(Product product) {
-    return DateConverter.isAvailable(product.availableTimeStarts, product.availableTimeEnds);
+    return DateConverter.isAvailable(
+        product.availableTimeStarts, product.availableTimeEnds);
   }
 
-  double getDiscount(Product product) => product.restaurantDiscount == 0 ? product.discount : product.restaurantDiscount;
+  double getDiscount(Product product) => product.restaurantDiscount == 0
+      ? product.discount
+      : product.restaurantDiscount;
 
-  String getDiscountType(Product product) => product.restaurantDiscount == 0 ? product.discountType : 'percent';
-
+  String getDiscountType(Product product) =>
+      product.restaurantDiscount == 0 ? product.discountType : 'percent';
 }

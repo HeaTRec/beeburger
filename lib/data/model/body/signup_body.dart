@@ -6,7 +6,13 @@ class SignUpBody {
   String password;
   String refCode;
 
-  SignUpBody({this.fName, this.lName, this.phone, this.email='', this.password, this.refCode = ''});
+  SignUpBody(
+      {this.fName,
+      this.lName,
+      this.phone,
+      this.email = '',
+      this.password,
+      this.refCode = ''});
 
   SignUpBody.fromJson(Map<String, dynamic> json) {
     fName = json['f_name'];

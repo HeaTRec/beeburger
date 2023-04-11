@@ -17,6 +17,8 @@ import 'package:expandable_bottom_sheet/expandable_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../profile/profile_screen.dart';
+
 class DashboardScreen extends StatefulWidget {
   final int pageIndex;
   DashboardScreen({@required this.pageIndex});
@@ -39,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     _isLogin = Get.find<AuthController>().isLoggedIn();
 
-    if(_isLogin){
+    if (_isLogin) {
       Get.find<OrderController>().getRunningOrders(1, notify: false);
     }
 
@@ -72,11 +74,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
           _setPage(0);
           return false;
         } else {
-          if(_canExit) {
+          if (_canExit) {
             return true;
-          }else {
+          } else {
             ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text('back_press_again_to_exit'.tr, style: TextStyle(color: Colors.white)),
+              content: Text('back_press_again_to_exit'.tr,
+                  style: TextStyle(color: Colors.white)),
               behavior: SnackBarBehavior.floating,
               backgroundColor: Colors.green,
               duration: Duration(seconds: 2),
@@ -106,74 +109,92 @@ class _DashboardScreenState extends State<DashboardScreen> {
         // ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
 
-        bottomNavigationBar: ResponsiveHelper.isDesktop(context) ? SizedBox() : GetBuilder<OrderController>(builder: (orderController) {
+        bottomNavigationBar: ResponsiveHelper.isDesktop(context)
+            ? SizedBox()
+            : GetBuilder<OrderController>(builder: (orderController) {
+                return (orderController.showBottomSheet &&
+                        (orderController.runningOrderList != null &&
+                            orderController.runningOrderList.length > 0))
+                    ? SizedBox()
+                    : BottomAppBar(
+                        elevation: 5,
+                        notchMargin: 5,
+                        clipBehavior: Clip.antiAlias,
+                        shape: CircularNotchedRectangle(),
+                        child: Padding(
+                          padding: EdgeInsets.all(
+                              Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                          child: Row(children: [
+                            BottomNavItem(
+                                iconData: Icons.home,
+                                isSelected: _pageIndex == 0,
+                                onTap: () => _setPage(0)),
+                            BottomNavItem(
+                                iconData: Icons.shopping_bag,
+                                isSelected: _pageIndex == 1,
+                                onTap: () => _setPage(1)),
+                            // Expanded(child: SizedBox()),
+                            BottomNavItem(
+                                iconData: Icons.shopping_cart,
+                                isSelected: _pageIndex == 2,
+                                onTap: () => _setPage(2)),
+                            BottomNavItem(
+                                iconData: Icons.person,
+                                isSelected: _pageIndex == 4,
+                                onTap: () {
+                                  Get.bottomSheet(ProfileScreen(),
+                                      backgroundColor: Colors.transparent,
+                                      isScrollControlled: true);
+                                }),
+                          ]),
+                        ),
+                      );
+              }),
+        body: GetBuilder<OrderController>(builder: (orderController) {
+          List<OrderModel> _runningOrder =
+              orderController.runningOrderList != null
+                  ? orderController.runningOrderList
+                  : [];
 
-            return (orderController.showBottomSheet && (orderController.runningOrderList != null && orderController.runningOrderList.length > 0))
-            ? SizedBox() : BottomAppBar(
-              elevation: 5,
-              notchMargin: 5,
-              clipBehavior: Clip.antiAlias,
-              shape: CircularNotchedRectangle(),
-
-              child: Padding(
-                padding: EdgeInsets.all(Dimensions.PADDING_SIZE_EXTRA_SMALL),
-                child: Row(children: [
-                  BottomNavItem(iconData: Icons.home, isSelected: _pageIndex == 0, onTap: () => _setPage(0)),
-                  BottomNavItem(iconData: Icons.shopping_bag, isSelected: _pageIndex == 1, onTap: () => _setPage(1)),
-                  // Expanded(child: SizedBox()),
-                  BottomNavItem(iconData: Icons.shopping_cart, isSelected: _pageIndex == 2, onTap: () => _setPage(2)),
-                  BottomNavItem(iconData: Icons.person, isSelected: _pageIndex == 4, onTap: () {
-                    Get.bottomSheet(MenuScreen(), backgroundColor: Colors.transparent, isScrollControlled: true);
-                  }),
-                ]),
-              ),
-            );
-          }
-        ),
-        body: GetBuilder<OrderController>(
-          builder: (orderController) {
-            List<OrderModel> _runningOrder = orderController.runningOrderList != null ? orderController.runningOrderList : [];
-
-            List<OrderModel> _reversOrder =  List.from(_runningOrder.reversed);
-            return ExpandableBottomSheet(
-              background: PageView.builder(
-                controller: _pageController,
-                itemCount: _screens.length,
-                physics: NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return _screens[index];
-                },
-              ),
-              persistentContentHeight: 100,
-
-              onIsContractedCallback: () {
-                if(!orderController.showOneOrder) {
-                  orderController.showOrders();
-                }
+          List<OrderModel> _reversOrder = List.from(_runningOrder.reversed);
+          return ExpandableBottomSheet(
+            background: PageView.builder(
+              controller: _pageController,
+              itemCount: _screens.length,
+              physics: NeverScrollableScrollPhysics(),
+              itemBuilder: (context, index) {
+                return _screens[index];
               },
-              onIsExtendedCallback: () {
-                if(orderController.showOneOrder) {
-                  orderController.showOrders();
-                }
-              },
-
-              enableToggle: true,
-
-              expandableContent: (ResponsiveHelper.isDesktop(context) || !_isLogin || orderController.runningOrderList == null
-                  || orderController.runningOrderList.isEmpty || !orderController.showBottomSheet) ? null
-                  : Dismissible(
+            ),
+            persistentContentHeight: 100,
+            onIsContractedCallback: () {
+              if (!orderController.showOneOrder) {
+                orderController.showOrders();
+              }
+            },
+            onIsExtendedCallback: () {
+              if (orderController.showOneOrder) {
+                orderController.showOrders();
+              }
+            },
+            enableToggle: true,
+            expandableContent: (ResponsiveHelper.isDesktop(context) ||
+                    !_isLogin ||
+                    orderController.runningOrderList == null ||
+                    orderController.runningOrderList.isEmpty ||
+                    !orderController.showBottomSheet)
+                ? null
+                : Dismissible(
                     key: UniqueKey(),
                     onDismissed: (direction) {
-                      if(orderController.showBottomSheet){
+                      if (orderController.showBottomSheet) {
                         orderController.showRunningOrders();
                       }
                     },
                     child: RunningOrderViewWidget(reversOrder: _reversOrder),
-              ),
-
-            );
-          }
-        ),
+                  ),
+          );
+        }),
       ),
     );
   }

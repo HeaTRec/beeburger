@@ -25,6 +25,7 @@ import 'package:efood_multivendor/view/screens/home/theme1/theme1_home_screen.da
 import 'package:efood_multivendor/view/screens/home/web_home_screen.dart';
 // import 'package:efood_multivendor/view/screens/home/widget/cuisine_view.dart';
 import 'package:efood_multivendor/view/screens/home/widget/filter_view.dart';
+import 'package:efood_multivendor/view/screens/home/widget/popular_food_view.dart';
 // import 'package:efood_multivendor/view/screens/home/widget/near_by_button_view.dart';
 // import 'package:efood_multivendor/view/screens/home/widget/popular_food_view.dart';
 // import 'package:efood_multivendor/view/screens/home/widget/item_campaign_view.dart';
@@ -256,9 +257,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: Dimensions.PADDING_SIZE_SMALL),
                                 decoration: BoxDecoration(
-                                  color: Theme.of(context).cardColor,
+                                  color: Colors.black12,
                                   borderRadius: BorderRadius.circular(
-                                      Dimensions.RADIUS_SMALL),
+                                      Dimensions.RADIUS_EXTRA_LARGE),
                                   boxShadow: [
                                     BoxShadow(
                                         color: Colors
@@ -268,19 +269,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ],
                                 ),
                                 child: Row(children: [
-                                  Icon(Icons.search,
-                                      size: 25,
-                                      color: Theme.of(context).primaryColor),
-                                  SizedBox(
-                                      width:
-                                          Dimensions.PADDING_SIZE_EXTRA_SMALL),
                                   Expanded(
-                                      child: Text(
-                                          'search_food_or_restaurant'.tr,
+                                      child: Text('Seaarch By Name'.tr,
                                           style: robotoRegular.copyWith(
                                             fontSize: Dimensions.fontSizeSmall,
                                             color: Theme.of(context).hintColor,
                                           ))),
+                                  SizedBox(
+                                      width:
+                                          Dimensions.PADDING_SIZE_EXTRA_SMALL),
+                                  Icon(Icons.search,
+                                      size: 25, color: Colors.black),
                                 ]),
                               ),
                             ),
@@ -298,10 +297,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                       height: Dimensions.PADDING_SIZE_SMALL),
                                   _configModel.popularRestaurant == 1
-                                      ? PopularRestaurantView(isPopular: true)
+                                      ? PopularFoodView(isPopular: true)
                                       : SizedBox(),
                                   CategoryView(),
-
 
                                   // SizedBox(height: Dimensions.PADDING_SIZE_SMALL),
                                   // _configModel.popularRestaurant == 1 ? PopularRestaurantView(isPopular: true) : SizedBox(),
